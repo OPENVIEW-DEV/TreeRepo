@@ -1,0 +1,7 @@
+openview_treerepo_homepage:
+    pattern:  /repo/browse
+    defaults: { _controller: OpenviewTreeRepoBundle:Browser:index }
+    
+openview_treerepo_uploadform:
+    pattern:  /repo/upload
+    defaults: { _controller: OpenviewTreeRepoBundle:Upload:upload }

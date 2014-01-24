@@ -1,0 +1,7 @@
+parameters:
+#    openview_tree_repo.example.class: Openview\TreeRepoBundle\Example
+
+services:
+#    openview_tree_repo.example:
+#        class: %openview_tree_repo.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
