@@ -1,6 +1,24 @@
-openview_treerepo_homepage:
-    pattern:  /repo/browse
-    defaults: { _controller: OpenviewTreeRepoBundle:Browser:index }
+openview_treerepo_node_index:
+    pattern:  /repo/browse/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:index, nodeid: null }
+
+openview_treerepo_node_rpclistdir:
+    pattern:  /repo/listdir/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:rpcListDir, nodeid: null }
+    options:
+        expose: true
+
+openview_treerepo_node_rpclistfile:
+    pattern:  /repo/listfile/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:rpcListFile, nodeid: null }
+    options:
+        expose: true
+
+openview_treerepo_node_newfolder:
+    pattern:  /repo/node/newfolder/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:newFolder, nodeid: null }
+    options:
+        expose: true
     
 openview_treerepo_uploadform:
     pattern:  /repo/upload

@@ -1,0 +1,20 @@
+breadcrumbs:
+    repository: Repository
+    newfolder:  Nuova cartella
+    
+toolbar:
+    uplevel:    Risali
+    upload:     Carica documento
+    createdir:  Nuova cartella
+    
+pages:
+    index:
+        title:  Archivio
+        folderstitle: Sfoglia le cartelle
+        filestitle: Contenuto di
+    newfolder:
+        title:  Creazione nuova cartella
+        form:
+            name: Folder name
+            desc: Folder description
+    

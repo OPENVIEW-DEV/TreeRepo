@@ -1,0 +1,179 @@
+{#
+Show the children of a node
+Parameters:
+- folders
+#}
+{% extends '::base.html.twig' %}
+{% trans_default_domain 'treerepo' %}
+
+
+
+{% block breadcrumbs %}
+    <li class="active">
+        <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+    </li>
+    <li class="active">
+        {{ 'breadcrumbs.repository' | trans }}
+    </li>
+{% endblock %}
+    
+    
+
+{% block content %}
+<div class="col-xs-12">
+    <!-- Title -->
+    <div class="page-header">
+        <h1>{{ 'pages.index.title' | trans }}</h1>
+    </div>
+
+
+    <!-- Directory listing -->
+    <div class="row" id="treerepo-browser">
+        <div class="col-xs-4">
+            <div class="widget-box">
+                <div class="widget-header header-color-dark">
+                    <h4 class="lighter smaller">{{ 'pages.index.folderstitle' | trans }}</h4>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main padding-8">
+                        <div class="tree" id="tree-folders">
+                            <!-- ajax-populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xs-8">
+            <div class="widget-box">
+                <div class="widget-header header-color-dark">
+                    <h4 class="lighter smaller">{{ 'pages.index.filestitle' | trans }} <span id="foldername"></span></h4>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-toolbox">
+                        <div class="btn-toolbar">
+                            <div class="btn-group">
+                                <button class="btn btn-default btn-xs" id="btn-newfolder">{{ 'toolbar.createdir' | trans }}</button>
+                                <a class="btn btn-default btn-xs" href="{{ url('openview_treerepo_uploadform') }}" id="btn-upload">{{ 'toolbar.upload' | trans }}</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-main padding-8">
+                        <div class="tree" id="tree-files">
+                            <!-- ajax-populated -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+            
+        <div class="col-xs-12">    
+            <!--div class="tree tree-unselectable">
+                {% for folder in folders %}
+                <div class="tree-folder">
+                    <div class="tree-folder-header">
+                        <i class="icon-folder-close"></i>
+                        <div class="tree-folder-name"><a href="{{ url('openview_treerepo_node_index', {'nodeid': folder.id }) }}" title="{{ folder.description }}">{{ folder.name }}</a></div>
+                    </div>
+                </div>
+                {% endfor %}
+                <div class="tree-item">
+                    <div class="tree-item-header">
+                        <i class="icon-file-alt"></i>
+                        <div class="tree-item-name">File</div>
+                    </div>
+                </div>
+            </div-->
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+    <script type="text/javascript" src="{{ asset('vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.tree.min.js') }}"></script>
+    {% javascripts
+        '@OpenviewTreeRepoBundle/Resources/public/js/foldersTree.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    
+    <script type="text/javascript">
+        jQuery(function($){
+            $('#tree-folders').ace_tree({
+                dataSource: new DataSourceTree({ url: Routing.generate('openview_treerepo_node_rpclistdir', null) }),
+                multiSelect: false,
+                cacheItems: true,
+                loadingHTML: '<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+                'open-icon' : 'icon-folder-close',
+                'close-icon' : 'icon-folder-close',
+                'selectable' : true,
+                'selected-icon' : 'icon-ok',
+                'unselected-icon' : 'icon-remove'
+            });
+            
+            /* quando apro o chiudo una cartella */
+            $('#tree-folders').on('opened', function (evt, data) {
+                // imposto i suoi dati nell'elenco file
+                $('#tree-files').data('parentid', data.id);
+                $('#btn-newfolder').data('parentid', data.id);
+                $('#foldername').text(data.name);
+                // avvia aggiornamento elenco file
+                aggiornaElencoFile();
+            });
+            $('#tree-folders').on('closed', function (evt, data) {
+                // imposto i suoi dati nell'elenco file
+                $('#tree-files').data('parentid', data.id);
+                $('#foldername').text(data.name);
+                // avvia aggiornamento elenco file
+                aggiornaElencoFile();
+            });
+            
+            /* mostra l'elenco dei file basandosi sull'elenco json indicato */
+            function mostraElencoFile(elencoJson) {
+                $('#tree-files').append('<div class="alert alert-info">Mostro elenco file.</div>');
+            }
+            
+            /* aggiorno elenco file */
+            function aggiornaElencoFile() {
+                var parentid = $('#tree-files').data('parentid');
+                var url = Routing.generate('openview_treerepo_node_rpclistfile', {'nodeid': parentid});
+                $('#tree-files').empty();
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    success: function (response) {
+                        if (response.status == "OK") {
+                            // mostra elenco file
+                            console.log('Elenco ricevuto: ' + JSON.stringify(response));
+                            mostraElencoFile(response);
+                        } else {
+                            // mostra messaggio errore dati
+                            console.log('Ricevuto elenco con errore: ' + JSON.stringify(response));
+                            $('#tree-files').append('<div class="alert alert-warning">Errori nella generazione dell\'elenco degli elementi.</div>')
+                        }
+                    },
+                    error: function (response, textStatus, errorThrown) {
+                        // mostra messaggio di errore chiamata
+                        console.log('Errore di comunicazione: ' + JSON.stringify(response));
+                        console.log('Status: ' + textStatus);
+                        console.log('Errore: ' + errorThrown);
+                        $('#tree-files').append('<div class="alert alert-warning">Errore di comunicazione.</div>')
+                    }
+                });
+            }
+            
+            /* se clicco il btn per creare una cartella */
+            $('#btn-newfolder').click(function(e) {
+                // legge parent id
+                var parentid = $(this).data('parentid');
+                if (parentid == 'undefined') {
+                    parentid = null;
+                }
+                // costruisce URL dove andare
+                var url = Routing.generate('openview_treerepo_node_newfolder', {'nodeid': parentid });
+                // manda a quell'URL
+                window.location = url;
+            });
+        });
+    </script>
+{% endblock %}
