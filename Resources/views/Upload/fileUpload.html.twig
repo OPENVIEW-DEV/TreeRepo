@@ -1,0 +1,150 @@
+{#
+    New file upload form
+    Parameters:
+    - form
+    - parentfolder
+#}
+{% extends '::base.html.twig' %}
+{% trans_default_domain 'treerepo' %}
+
+
+
+{% block stylesheets %}
+    {% stylesheets 
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/css/extra/blueimp-gallery.min.css' 
+            filter='cssrewrite,?yui_css'
+            %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload-ui.css') }}">
+    <noscript><link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload-noscript.css') }}"></noscript>
+    <noscript><link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload-ui-noscript.css') }}"></noscript>
+{% endblock %}
+
+
+
+{% block breadcrumbs %}
+    <li class="active">
+        <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+    </li>
+    <li class="active">
+        <a href="{{ url('openview_treerepo_node_index') }}">{{ 'breadcrumbs.repository' | trans }}</a>
+    </li>
+    <li class="active">
+        {{ 'breadcrumbs.uploadfile' | trans }}
+    </li>
+{% endblock %}
+    
+    
+
+{% block content %}
+<div class="col-xs-12">
+    <!-- Title -->
+    <div class="page-header">
+        <h1>{{ 'pages.uploadfile.title' | trans }}
+            <small>{{ 'pages.uploadfile.parentfolder' | trans }}
+                {% spaceless %}
+                    {% if parentfolder is not null %}
+                        {{ parentfolder.name }}
+                    {% else %}
+                        {{ 'pages.uploadfile.rootfolder' | trans }}
+                    {% endif %}
+                {% endspaceless %}
+            </small>
+        </h1>
+    </div>
+
+    <!-- Form -->
+    <div class="row" id="treerepo-upload">
+        <form id="fileupload" 
+              action="{{ url('openview_treerepo_node_uploadfile') }}" 
+              method="POST" 
+              enctype="multipart/form-data" 
+              data-url="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/server/php/index.php') }}">
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">{{ 'pages.uploadfile.form.name' | trans }}</label>
+                <div class="col-sm-9">
+                    {{ form_widget(form.name, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right">{{ 'pages.uploadfile.form.files' | trans }}</label>
+                <div class="col-sm-9">
+                    <div class="row fileupload-buttonbar">
+                        <div class="col-lg-7">
+                            <span class="btn btn-sm btn-success fileinput-button">
+                                <i class="icon icon-plus"></i>
+                                <span>{{ 'pages.uploadfile.form.browse' | trans }}</span>
+                                <input type="file" name="files[]" multiple>
+                            </span>
+                            <button type="submit" class="btn btn-sm btn-primary start">
+                                <i class="icon icon-upload"></i>
+                                <span>{{ 'pages.uploadfile.form.upload' | trans }}</span>
+                            </button>
+                            <button type="reset" class="btn btn-sm btn-warning cancel">
+                                <i class="icon icon-ban-circle"></i>
+                                <span>{{ 'pages.uploadfile.form.reset' | trans }}</span>
+                            </button>
+                            <!--button type="button" class="btn btn-sm btn-danger delete">
+                                <i class="icon icon-trash"></i>
+                                <span>{{ 'pages.uploadfile.form.delete' | trans }}</span>
+                            </button>
+                            <input type="checkbox" class="toggle"-->
+                            <!-- The global file processing state -->
+                            <span class="fileupload-process"></span>
+                        </div>
+                        <div class="col-lg-5 fileupload-progress fade">
+                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                            </div>
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                    </div>
+                    <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
+                    <!-- The blueimp Gallery widget -->
+                    <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls" data-filter=":even">
+                        <div class="slides"></div>
+                        <h3 class="title"></h3>
+                        <a class="prev">‹</a>
+                        <a class="next">›</a>
+                        <a class="close">×</a>
+                        <a class="play-pause"></a>
+                        <ol class="indicator"></ol>
+                    </div>
+                </div>
+            </div>  
+            {{ form_rest(form) }}
+            <div class="form-group">
+                <div class="col-md-offset-3 col-sm-9">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="icon icon-upload"></i>
+                        <span>{{ 'pages.uploadfile.form.upload' | trans }}</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+    
+    
+    
+{% block javascripts %}   
+{% include 'OpenviewTreeRepoBundle:Upload:galleryJsTemplates.html.twig' %}    
+{% javascripts 
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/extra/*' 
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.iframe-transport.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-process.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-image.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-audio.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-video.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-validate.js'
+        'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-ui.js'
+        '@OpenviewTreeRepoBundle/Resources/public/js/uploadSetup.js' 
+    %}
+    <script type="text/javascript" src="{{ asset_url }}"></script>
+{% endjavascripts %}
+{% endblock javascripts %}

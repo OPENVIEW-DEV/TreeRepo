@@ -1,16 +1,42 @@
 <?php
 namespace Openview\TreeRepoBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Openview\TreeRepoBundle\Document\StoredItem;
+use Symfony\Component\HttpFoundation\Response;
 use Openview\TreeRepoBundle\Entity\Node;
+use Openview\TreeRepoBundle\Document\StoredItem;
+use Openview\TreeRepoBundle\Form\Type\FileUploadType;
+
 
 /**
  * to upload documents in the repository
  */
 class UploadController extends Controller
 {
+    
+    /**
+     * Read a file to be uploaded
+     */
+    public function fileUploadAction(Request $request, $parentid) {
+        $node = new Node();
+        if ($parentid !== null) {
+            $parentFolder = $this->getDoctrine()->getRepository('OpenviewTreeRepoBundle:Node')->find($parentid);
+        } else {
+            $parentFolder = null;
+        }
+        $form = $this->createForm(new FileUploadType($parentid), $node);
+        $form->handleRequest($request);
+        if ($request->isMethod('POST')) {
+            return new Response('');
+        }
+        return $this->render('OpenviewTreeRepoBundle:Upload:fileUpload.html.twig', array(
+            'form' => $form->createView(),
+            'parentfolder' => $parentFolder,
+        ));
+    }
+    
+    
+    
     public function uploadAction(Request $request)
     {
         $menu = new Node();

@@ -19,7 +19,11 @@ openview_treerepo_node_newfolder:
     defaults: { _controller: OpenviewTreeRepoBundle:Node:newFolder, nodeid: null }
     options:
         expose: true
+
+openview_treerepo_node_uploadfile:
+    pattern:  /repo/node/upload/{parentid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Upload:fileUpload, parentid: null }
+    methods:  [POST, GET]
+    options:
+        expose: true
     
-openview_treerepo_uploadform:
-    pattern:  /repo/upload
-    defaults: { _controller: OpenviewTreeRepoBundle:Upload:upload }

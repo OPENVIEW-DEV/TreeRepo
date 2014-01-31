@@ -53,7 +53,7 @@ Parameters:
                         <div class="btn-toolbar">
                             <div class="btn-group">
                                 <button class="btn btn-default btn-xs" id="btn-newfolder">{{ 'toolbar.createdir' | trans }}</button>
-                                <a class="btn btn-default btn-xs" href="{{ url('openview_treerepo_uploadform') }}" id="btn-upload">{{ 'toolbar.upload' | trans }}</a>
+                                <button class="btn btn-default btn-xs" id="btn-upload">{{ 'toolbar.upload' | trans }}</button>
                             </div>
                         </div>
                     </div>
@@ -64,25 +64,6 @@ Parameters:
                     </div>
                 </div>
             </div>
-        </div>
-            
-        <div class="col-xs-12">    
-            <!--div class="tree tree-unselectable">
-                {% for folder in folders %}
-                <div class="tree-folder">
-                    <div class="tree-folder-header">
-                        <i class="icon-folder-close"></i>
-                        <div class="tree-folder-name"><a href="{{ url('openview_treerepo_node_index', {'nodeid': folder.id }) }}" title="{{ folder.description }}">{{ folder.name }}</a></div>
-                    </div>
-                </div>
-                {% endfor %}
-                <div class="tree-item">
-                    <div class="tree-item-header">
-                        <i class="icon-file-alt"></i>
-                        <div class="tree-item-name">File</div>
-                    </div>
-                </div>
-            </div-->
         </div>
     </div>
 </div>
@@ -115,6 +96,7 @@ Parameters:
                 // imposto i suoi dati nell'elenco file
                 $('#tree-files').data('parentid', data.id);
                 $('#btn-newfolder').data('parentid', data.id);
+                $('#btn-upload').data('parentid', data.id);
                 $('#foldername').text(data.name);
                 // avvia aggiornamento elenco file
                 aggiornaElencoFile();
@@ -122,6 +104,8 @@ Parameters:
             $('#tree-folders').on('closed', function (evt, data) {
                 // imposto i suoi dati nell'elenco file
                 $('#tree-files').data('parentid', data.id);
+                $('#btn-newfolder').data('parentid', data.id);
+                $('#btn-upload').data('parentid', data.id);
                 $('#foldername').text(data.name);
                 // avvia aggiornamento elenco file
                 aggiornaElencoFile();
@@ -144,19 +128,19 @@ Parameters:
                     success: function (response) {
                         if (response.status == "OK") {
                             // mostra elenco file
-                            console.log('Elenco ricevuto: ' + JSON.stringify(response));
+                            //console.log('Elenco ricevuto: ' + JSON.stringify(response));
                             mostraElencoFile(response);
                         } else {
                             // mostra messaggio errore dati
-                            console.log('Ricevuto elenco con errore: ' + JSON.stringify(response));
+                            //console.log('Ricevuto elenco con errore: ' + JSON.stringify(response));
                             $('#tree-files').append('<div class="alert alert-warning">Errori nella generazione dell\'elenco degli elementi.</div>')
                         }
                     },
                     error: function (response, textStatus, errorThrown) {
                         // mostra messaggio di errore chiamata
-                        console.log('Errore di comunicazione: ' + JSON.stringify(response));
-                        console.log('Status: ' + textStatus);
-                        console.log('Errore: ' + errorThrown);
+                        //console.log('Errore di comunicazione: ' + JSON.stringify(response));
+                        //console.log('Status: ' + textStatus);
+                        //console.log('Errore: ' + errorThrown);
                         $('#tree-files').append('<div class="alert alert-warning">Errore di comunicazione.</div>')
                     }
                 });
@@ -171,6 +155,20 @@ Parameters:
                 }
                 // costruisce URL dove andare
                 var url = Routing.generate('openview_treerepo_node_newfolder', {'nodeid': parentid });
+                //console.log('url: ' + url);
+                // manda a quell'URL
+                window.location = url;
+            });
+            /* se clicco il btn per uploadare un file */
+            $('#btn-upload').click(function(e) {
+                // legge parent id
+                var parentid = $(this).data('parentid');
+                if (parentid == 'undefined') {
+                    parentid = null;
+                }
+                // costruisce URL dove andare
+                var url = Routing.generate('openview_treerepo_node_uploadfile', {'parentid': parentid });
+                //console.log('url: ' + url);
                 // manda a quell'URL
                 window.location = url;
             });

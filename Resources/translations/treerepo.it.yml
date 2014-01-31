@@ -1,6 +1,7 @@
 breadcrumbs:
     repository: Repository
     newfolder:  Nuova cartella
+    uploadfile: Caricamento file
     
 toolbar:
     uplevel:    Risali
@@ -16,5 +17,15 @@ pages:
         title:  Creazione nuova cartella
         form:
             name: Folder name
-            desc: Folder description
+    uploadfile:
+        title: Carica un file
+        parentfolder: Nella cartella
+        rootfolder: radice
+        form:
+            name: Nome
+            files: Scegli i file da caricare
+            browse: Scegli file...
+            upload: Invia
+            reset: Pulisci
+            delete: Elimina
     

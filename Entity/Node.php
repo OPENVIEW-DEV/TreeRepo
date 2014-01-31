@@ -32,16 +32,6 @@ class Node {
      */
     protected $name;
     /**
-     * @var string
-     * @ORM\Column(name="description", type="text", nullable=true)
-     */
-    protected $description;
-    /**
-     * @var string
-     * @ORM\Column(name="filename", type="string", nullable=true)
-     */
-    protected $fileName;
-    /**
      * @var integer
      * @ORM\Column(name="type", type="integer", nullable=true)
      */
@@ -90,26 +80,31 @@ class Node {
      * @Gedmo\Timestampable(on="create")
      * @ORM\Column(type="datetime")
      */
-    private $created;
+    protected $created;
     /**
      * @var datetime $updated
      *
      * @Gedmo\Timestampable(on="update")
      * @ORM\Column(type="datetime")
      */
-    private $updated;
+    protected $updated;
+    /**
+     * @var string Dynamic Document ID containing the metadata
+     * @ORM\Column(type="string", nullable=true)
+     */
+    protected $metadata;
+    /**
+     * @ORM\ManyToOne(targetEntity="FileType", inversedBy="nodes")
+     * @ORM\JoinColumn(name="filetype", referencedColumnName="id")
+     */
+    protected $filetype;
+    
     
     public function getId() {
         return $this->id;
     }
     public function getName() {
         return $this->name;
-    }
-    public function getDescription() {
-        return $this->description;
-    }
-    public function getFileName() {
-        return $this->fileName;
     }
     public function getType() {
         return $this->type;
@@ -138,14 +133,6 @@ class Node {
     }
     public function setName($name) {
         $this->name = $name;
-        return $this;
-    }
-    public function setDescription($description) {
-        $this->description = $description;
-        return $this;
-    }
-    public function setFileName($fileName) {
-        $this->fileName = $fileName;
         return $this;
     }
     public function setType($type) {
@@ -182,7 +169,25 @@ class Node {
     public function getUpdated() {
         return $this->updated;
     }
+    public function getMetadata() {
+        return $this->metadata;
+    }
+
+    public function setMetadata($metadata) {
+        $this->metadata = $metadata;
+        return $this;
+    }
+    public function getFiletype() {
+        return $this->filetype;
+    }
+
+    public function setFiletype($filetype) {
+        $this->filetype = $filetype;
+        return $this;
+    }
+
     
+        
     
     /**
      * Constructor

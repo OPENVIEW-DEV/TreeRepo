@@ -14,7 +14,7 @@
         <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
     </li>
     <li class="active">
-        {{ 'breadcrumbs.repository' | trans }}
+        <a href="{{ url('openview_treerepo_node_index') }}">{{ 'breadcrumbs.repository' | trans }}</a>
     </li>
     <li class="active">
         {{ 'breadcrumbs.newfolder' | trans }}
@@ -38,12 +38,6 @@
                 <label class="col-sm-3 control-label no-padding-right">{{ 'pages.newfolder.form.name' | trans }}</label>
                 <div class="col-sm-9">
                     {{ form_widget(form.name, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
-                </div>
-            </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right">{{ 'pages.newfolder.form.desc' | trans }}</label>
-                <div class="col-sm-9">
-                    {{ form_widget(form.description, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
                 </div>
             </div>
             <div class="form-group">

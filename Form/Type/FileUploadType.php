@@ -4,7 +4,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
 
-class FolderType extends AbstractType {
+class FileUploadType extends AbstractType {
     protected $parentid;
     
     
@@ -33,6 +33,6 @@ class FolderType extends AbstractType {
     
     public function getName()
     {
-        return "treerepo_node_folder";
+        return "treerepo_node_file";
     }
 }

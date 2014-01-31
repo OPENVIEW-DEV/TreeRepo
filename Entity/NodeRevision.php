@@ -7,7 +7,7 @@ use Openview\TreeRepoBundle\Entity\Node;
 /**
  * Revision for a node
  *
- * @ORM\Table(name="node_revision")
+ * @ORM\Table(name="treerepo_node_revision")
  * @ORM\Entity
  */
 class NodeRevision {
