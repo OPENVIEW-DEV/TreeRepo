@@ -24,8 +24,9 @@ pages:
         form:
             name: Nome
             files: Scegli i file da caricare
-            browse: Scegli file...
+            addfiles: Carica file...
             upload: Invia
+            uploadall: Invia tutti
             reset: Pulisci
             delete: Elimina
     

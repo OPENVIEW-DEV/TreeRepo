@@ -76,6 +76,40 @@ $(function () {
             $(this).fileupload('option', 'done')
                 .call(this, $.Event('done'), {result: result});
         });
+        /*
+         * Intercetto evento di aggiunta file 
+         */
+        $('#fileupload').bind('fileuploadadded', function(e, data) {
+            console.log('File aggiunto alla lista dei file da uploadare');
+        });
+        /* 
+         * Intercetto evento upload (di un file o nessuno, all'avvio) completato        
+         * - leggo info sul file: filename, parentid
+         * - creo il nodo via ajax
+         * - cancello la riga dall'elenco dei file uploadati
+         */
+        $('#fileupload').bind('fileuploadcompleted', function(e, data) {
+            // in data['result']['files'] trovo l'array dei file uploadati
+            var filesList = data['result']['files'];
+            for (var i=0; i<filesList.length; i++) {
+                var file = filesList[i];
+                var fileName = file['name'];
+                var parentId = $('#btn-newfolder').data('parentid');
+                console.log('Elaboro file: ' + fileName + ' con parent: ' + parentId);
+                var url = Routing.generate('openview_treerepo_node_rpcaddnode', {
+                    'parentid': parentId,
+                    'filename': fileName
+                });
+                $.ajax({'url': url})
+                .success(function() {
+                    // elimina la riga del file dall'elenco
+                    $('tr[data-filename="' + fileName + '"]').remove();
+                })
+                .error(function() {
+                    alert('upload fallito');
+                });
+            }
+        });
     }
 
 });

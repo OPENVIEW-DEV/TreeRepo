@@ -8,6 +8,19 @@ Parameters:
 
 
 
+{% block stylesheets %}
+    {% stylesheets 
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/css/extra/blueimp-gallery.min.css' 
+            filter='cssrewrite,?yui_css'
+            %}
+            <link rel="stylesheet" href="{{ asset_url }}" />
+        {% endstylesheets %}
+    <link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload.css') }}">
+    <link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload-ui.css') }}">
+{% endblock %}
+
+
+
 {% block breadcrumbs %}
     <li class="active">
         <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
@@ -25,10 +38,9 @@ Parameters:
     <div class="page-header">
         <h1>{{ 'pages.index.title' | trans }}</h1>
     </div>
-
-
-    <!-- Directory listing -->
+    
     <div class="row" id="treerepo-browser">
+        <!-- Directory tree -->
         <div class="col-xs-4">
             <div class="widget-box">
                 <div class="widget-header header-color-dark">
@@ -43,25 +55,47 @@ Parameters:
                 </div>
             </div>
         </div>
+        <!-- Direcectory content -->
         <div class="col-xs-8">
             <div class="widget-box">
                 <div class="widget-header header-color-dark">
                     <h4 class="lighter smaller">{{ 'pages.index.filestitle' | trans }} <span id="foldername"></span></h4>
                 </div>
                 <div class="widget-body">
+                    <form id="fileupload" 
+                                action="{{ url('openview_treerepo_node_uploadfile') }}" 
+                                method="POST" 
+                                enctype="multipart/form-data" 
+                                data-url="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/server/php/index.php') }}">
                     <div class="widget-toolbox">
                         <div class="btn-toolbar">
                             <div class="btn-group">
-                                <button class="btn btn-default btn-xs" id="btn-newfolder">{{ 'toolbar.createdir' | trans }}</button>
-                                <button class="btn btn-default btn-xs" id="btn-upload">{{ 'toolbar.upload' | trans }}</button>
+                                <span class="btn btn-sm btn-default" id="btn-newfolder">
+                                    <i class="icon icon-folder-open"></i>
+                                    {{ 'toolbar.createdir' | trans }}
+                                </span>
+                                <span class="btn btn-sm btn-success fileinput-button">
+                                    <i class="icon icon-plus"></i>
+                                    <span>{{ 'pages.uploadfile.form.addfiles' | trans }}</span>
+                                    <input type="file" name="files[]" multiple>
+                                </span>
                             </div>
                         </div>
+                        <span class="fileupload-process"></span>
+                        <div class="col-lg-5 fileupload-progress fade">
+                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
+                            </div>
+                            <div class="progress-extended">&nbsp;</div>
+                        </div>
+                        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                     </div>
                     <div class="widget-main padding-8">
                         <div class="tree" id="tree-files">
                             <!-- ajax-populated -->
                         </div>
                     </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -71,14 +105,91 @@ Parameters:
 
 
 {% block javascripts %}
-    <script type="text/javascript" src="{{ asset('vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.tree.min.js') }}"></script>
-    {% javascripts
-        '@OpenviewTreeRepoBundle/Resources/public/js/foldersTree.js' %}
-        <script src="{{ asset_url }}"></script>
+    {% include 'OpenviewTreeRepoBundle:Upload:galleryJsTemplates.html.twig' %}    
+    {% javascripts 
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/js/extra/*' 
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.iframe-transport.js'
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload.js'
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-process.js'
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-image.js'
+            'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-ui.js'
+            '@OpenviewTreeRepoBundle/Resources/public/js/uploadSetup.js'
+            'vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.tree.min.js'
+            '@OpenviewTreeRepoBundle/Resources/public/js/foldersTree.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
     
     <script type="text/javascript">
+        /*
+            Aggiorna l'elenco dei file e l'albero delle cartelle dopo il clic su una cartella
+        */
+        function updateActiveDir(data) {
+            // imposto i dati della directory nell'elenco file
+            $('#tree-files').data('parentid', data.id);         // aggiorna parent-id in elenco file nella cartella
+            $('#btn-newfolder').data('parentid', data.id);      // aggiorna parent id in pulsante nuova cartella
+            $('#foldername').text(data.name);                   // aggiorna nome cartella in widget elenco file
+            // avvia aggiornamento elenco file
+            aggiornaElencoFile();
+        }
+        
+        
+        
+        /* 
+            mostra l'elenco dei file basandosi sull'elenco json indicato 
+        */
+        function mostraElencoFile(elencoJson) {
+            // se ho elemento da mostrare
+            if (elencoJson.data.length > 0) {
+                for (var i=0; i<elencoJson.data.length; i++) {
+                    var s = '<div class="tree-item">' +
+                        '<div class="tree-item-name">' + 
+                        '<i class="icon icon-file-alt"></i>' +
+                        elencoJson.data[i].name +
+                        '</div></div>';
+                    $('#tree-files').append(s);
+                }
+            } else {
+                var s = '<div class="alert alert-info">Folder empty</div>';
+                $('#tree-files').append(s);
+            }
+            //$('#tree-files').append('<div><pre>' + JSON.stringify(elencoJson) + '</pre></div>');
+        }
+
+        
+        
+        /* 
+            aggiorno elenco file 
+        */
+        function aggiornaElencoFile() {
+            var parentid = $('#tree-files').data('parentid');
+            var url = Routing.generate('openview_treerepo_node_rpclistfile', {'nodeid': parentid});
+            $('#tree-files').empty();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                dataType: 'json',
+                success: function (response) {
+                    if (response.status == "OK") {
+                        // mostra elenco file
+                        //console.log('Elenco ricevuto: ' + JSON.stringify(response));
+                        mostraElencoFile(response);
+                    } else {
+                        // mostra messaggio errore dati
+                        //console.log('Ricevuto elenco con errore: ' + JSON.stringify(response));
+                        $('#tree-files').append('<div class="alert alert-warning">Errori nella generazione dell\'elenco degli elementi.</div>')
+                    }
+                },
+                error: function (response, textStatus, errorThrown) {
+                    // mostra messaggio di errore chiamata
+                    console.log('Errore di comunicazione: ' + JSON.stringify(response));
+                    $('#tree-files').append('<div class="alert alert-warning">Errore di comunicazione.</div>')
+                }
+            });
+        }
+        
         jQuery(function($){
+            // applica treeview
             $('#tree-folders').ace_tree({
                 dataSource: new DataSourceTree({ url: Routing.generate('openview_treerepo_node_rpclistdir', null) }),
                 multiSelect: false,
@@ -90,61 +201,15 @@ Parameters:
                 'selected-icon' : 'icon-ok',
                 'unselected-icon' : 'icon-remove'
             });
+            updateActiveDir({'parentid':null, 'name':'/'});         // aggiorna elenco file in directory iniziale
             
             /* quando apro o chiudo una cartella */
             $('#tree-folders').on('opened', function (evt, data) {
-                // imposto i suoi dati nell'elenco file
-                $('#tree-files').data('parentid', data.id);
-                $('#btn-newfolder').data('parentid', data.id);
-                $('#btn-upload').data('parentid', data.id);
-                $('#foldername').text(data.name);
-                // avvia aggiornamento elenco file
-                aggiornaElencoFile();
+                updateActiveDir(data);
             });
             $('#tree-folders').on('closed', function (evt, data) {
-                // imposto i suoi dati nell'elenco file
-                $('#tree-files').data('parentid', data.id);
-                $('#btn-newfolder').data('parentid', data.id);
-                $('#btn-upload').data('parentid', data.id);
-                $('#foldername').text(data.name);
-                // avvia aggiornamento elenco file
-                aggiornaElencoFile();
+                updateActiveDir(data);
             });
-            
-            /* mostra l'elenco dei file basandosi sull'elenco json indicato */
-            function mostraElencoFile(elencoJson) {
-                $('#tree-files').append('<div class="alert alert-info">Mostro elenco file.</div>');
-            }
-            
-            /* aggiorno elenco file */
-            function aggiornaElencoFile() {
-                var parentid = $('#tree-files').data('parentid');
-                var url = Routing.generate('openview_treerepo_node_rpclistfile', {'nodeid': parentid});
-                $('#tree-files').empty();
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    dataType: 'json',
-                    success: function (response) {
-                        if (response.status == "OK") {
-                            // mostra elenco file
-                            //console.log('Elenco ricevuto: ' + JSON.stringify(response));
-                            mostraElencoFile(response);
-                        } else {
-                            // mostra messaggio errore dati
-                            //console.log('Ricevuto elenco con errore: ' + JSON.stringify(response));
-                            $('#tree-files').append('<div class="alert alert-warning">Errori nella generazione dell\'elenco degli elementi.</div>')
-                        }
-                    },
-                    error: function (response, textStatus, errorThrown) {
-                        // mostra messaggio di errore chiamata
-                        //console.log('Errore di comunicazione: ' + JSON.stringify(response));
-                        //console.log('Status: ' + textStatus);
-                        //console.log('Errore: ' + errorThrown);
-                        $('#tree-files').append('<div class="alert alert-warning">Errore di comunicazione.</div>')
-                    }
-                });
-            }
             
             /* se clicco il btn per creare una cartella */
             $('#btn-newfolder').click(function(e) {

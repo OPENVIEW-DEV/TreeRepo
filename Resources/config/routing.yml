@@ -14,6 +14,13 @@ openview_treerepo_node_rpclistfile:
     options:
         expose: true
 
+# dopo l'upload nella dir temporanea, crea il nodo e carica il file nel gridFS
+openview_treerepo_node_rpcaddnode:
+    pattern:  /repo/addnode/{parentid}/{filename}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:rpcAddNode }
+    options:
+        expose: true
+
 openview_treerepo_node_newfolder:
     pattern:  /repo/node/newfolder/{nodeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Node:newFolder, nodeid: null }

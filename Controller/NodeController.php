@@ -5,6 +5,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Openview\TreeRepoBundle\Form\Type\FolderType;
 use Openview\TreeRepoBundle\Entity\Node;
+use Openview\TreeRepoBundle\Document\StoredItem;
 
 /**
  * Manages repository structure: display, tree navigation, upload, ...
@@ -116,11 +117,11 @@ class NodeController extends Controller
             $filesArray = array('status'=>'OK', 'data'=>array());
             foreach ($files as $file) {
                 $filesArray['data'][] = array(
-                    'id'=>$folder->getId(),
-                    'name'=>$folder->getName(),
+                    'id'=>$file->getId(),
+                    'name'=>$file->getName(),
                     'type'=>'file',
                     'additionalParameters'=>array(
-                        'id'=>$folder->getId(),
+                        'id'=>$file->getId(),
                         'children'=>true,
                         'itemSelected'=>false,
                     )
@@ -131,5 +132,44 @@ class NodeController extends Controller
             $s = '"status":"KO","data":[]}';
         }
         return new Response($s);
+    }
+    
+    
+    /**
+     * Carica il file indicato nel gridfs e crea il Node che lo contiene
+     * 
+     * @return La risposta per la chiamata ajax che ha lanciato questo metodo
+     */
+    public function rpcAddNodeAction($parentid, $filename) {
+        // legge da db (o crea) nodo padre
+        if ($parentid !== null) {
+            $parent = $this->getDoctrine()->getRepository('OpenviewTreeRepoBundle:Node')->find($parentid);
+        } else {
+            $parent = new Node();
+        }
+        // creazione nodo
+        $node = new Node();
+        $node->setName($filename);
+        $node->setType(Node::TYPE_FILE);
+        $node->setParent($parent);
+        // creazione elemento gridfs
+        $uploadedFile = 'vendor/blueimp/jQuery-File-Upload-9.5.4/server/php/files/' . 
+                session_id() . '/' . $filename;
+        $document = new StoredItem();
+        $document->setFile($uploadedFile);
+        $document->setFilename($filename);
+        $document->setMimeType('application/octet-stream');
+        $dm = $this->get('doctrine.odm.mongodb.document_manager');
+        //$dm = $this->get('doctrine_mongodb');
+        $dm->persist($document);
+        $dm->flush();
+        // aggiornamento nodo
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($node);
+        $em->flush();
+        // eliminazione file temporaneo uploadato
+        unlink($uploadedFile);
+        
+        return new Response('Ok');
     }
 }
