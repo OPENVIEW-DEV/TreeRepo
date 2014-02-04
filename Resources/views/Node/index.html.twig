@@ -78,11 +78,11 @@ Parameters:
                     <div class="widget-toolbox">
                         <div class="btn-toolbar">
                             <div class="btn-group">
-                                <span class="btn btn-sm btn-default" id="btn-newfolder">
+                                <span class="btn btn-sm btn-primary" id="btn-newfolder">
                                     <i class="icon icon-folder-open"></i>
                                     {{ 'toolbar.createdir' | trans }}
                                 </span>
-                                <span class="btn btn-sm btn-success fileinput-button">
+                                <span class="btn btn-sm btn-success fileinput-button" id="btn-addfiles">
                                     <i class="icon icon-plus"></i>
                                     <span>{{ 'pages.uploadfile.form.addfiles' | trans }}</span>
                                     <input type="file" name="files[]" multiple>
@@ -127,6 +127,17 @@ Parameters:
             Aggiorna l'elenco dei file e l'albero delle cartelle dopo il clic su una cartella
         */
         function updateActiveDir(data) {
+            // se vedo la root folder, non permetto di caricare file
+            if (data.parentid === null) {
+                $('#btn-addfiles').removeClass('btn-success')
+                        .addClass('btn-disabled')
+                        .attr('disabled', 'disabled');
+                
+            } else {
+                $('#btn-addfiles').removeClass('btn-disabled')
+                        .addClass('btn-success')
+                        .attr('disabled', false);
+            }
             // cancello tutti i file selezionati per l'upload
             $('tr.template-upload').empty();
             // imposto i dati della directory nell'elenco file
@@ -187,7 +198,7 @@ Parameters:
                 },
                 error: function (response, textStatus, errorThrown) {
                     // mostra messaggio di errore chiamata
-                    console.log('Errore di comunicazione: ' + JSON.stringify(response));
+                    //console.log('Errore di comunicazione: ' + JSON.stringify(response));
                     $('#tree-files').append('<div class="alert alert-warning">Errore di comunicazione.</div>')
                 }
             });

@@ -102,7 +102,7 @@ $(function () {
                 $('tr[data-filename="' + fileName + '"]').remove();
                 // mostra messaggio temporaneo di aggiornamento in corso
                 $('#tree-files').empty();
-                $('#tree-files').append('<div class="alert alert-info">Aggiornamento in corso...</div>');
+                $('#tree-files').append('<div class="alert alert-info"><i class="icon-refresh icon-spin blue"></i> Aggiornamento in corso...</div>');
                 // aggiorna elenco file in cartella
                 setTimeout(function(){aggiornaElencoFile()}, 2000);
             })

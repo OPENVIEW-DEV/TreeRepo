@@ -79,6 +79,7 @@ class NodeController extends Controller
                         array('name'=>'ASC')
                 );
         if ($folders !== false) {
+            // crea array con risultati
             $foldersArray = array('status'=>'OK', 'data'=>array());
             foreach ($folders as $folder) {
                 $foldersArray['data'][] = array(
