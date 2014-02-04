@@ -61,7 +61,7 @@ $(function () {
      * Intercetto evento di aggiunta file 
      * Vedi: https://github.com/blueimp/jQuery-File-Upload/issues/2200
      */
-    $('#fileupload').bind('fileuploadadded', function(e, data) {
+    /*$('#fileupload').bind('fileuploadadded', function(e, data) {
         // avvia direttamente upload
         if (fileList == '') {
             fileList = data;
@@ -74,7 +74,7 @@ $(function () {
                 console.log('Upload completato con successo, aggiorno elenco file');
                 setTimeout(function(){aggiornaElencoFile()}, 1000);
             });
-    });
+    });*/
     
     
     
@@ -100,6 +100,11 @@ $(function () {
             .success(function() {
                 // elimina la riga del file dall'elenco
                 $('tr[data-filename="' + fileName + '"]').remove();
+                // mostra messaggio temporaneo di aggiornamento in corso
+                $('#tree-files').empty();
+                $('#tree-files').append('<div class="alert alert-info">Aggiornamento in corso...</div>');
+                // aggiorna elenco file in cartella
+                setTimeout(function(){aggiornaElencoFile()}, 2000);
             })
             .error(function() {
                 //console.log('upload fallito: ' + fileName);
