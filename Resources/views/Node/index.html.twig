@@ -82,12 +82,6 @@ Parameters:
                             </div>
                         </div>
                         <span class="fileupload-process"></span>
-                        <div class="col-lg-5 fileupload-progress fade">
-                            <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
-                                <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                            </div>
-                            <div class="progress-extended">&nbsp;</div>
-                        </div>
                         <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                     </div>
                     <div class="widget-main padding-8">
@@ -139,6 +133,7 @@ Parameters:
             mostra l'elenco dei file basandosi sull'elenco json indicato 
         */
         function mostraElencoFile(elencoJson) {
+            $('#tree-files').empty();
             // se ho elemento da mostrare
             if (elencoJson.data.length > 0) {
                 for (var i=0; i<elencoJson.data.length; i++) {

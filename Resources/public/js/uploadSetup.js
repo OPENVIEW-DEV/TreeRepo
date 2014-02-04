@@ -67,10 +67,13 @@ $(function () {
             fileList = data;
         } else {
             fileList.files.push(data.files[0]);
-            filelist.originalFiles.push(data.originalFiles[0]);
+            fileList.originalFiles.push(data.originalFiles[0]);
         }
-        console.log('Data: ' + JSON.stringify(fileList));
-        $('#fileupload').fileupload('send', {'files': fileList.files});
+        $('#fileupload').fileupload('send', {'files': fileList.files})
+            .success(function (result, textStatus, jqXHR) {
+                console.log('Upload completato con successo, aggiorno elenco file');
+                setTimeout(function(){aggiornaElencoFile()}, 1000);
+            });
     });
     
     
