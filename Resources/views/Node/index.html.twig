@@ -17,6 +17,14 @@ Parameters:
         {% endstylesheets %}
     <link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/css/jquery.fileupload-ui.css') }}">
+    <style>
+        .folder-selected > .tree-folder-name {
+            background-color: #4D6878;
+            color: #fff;
+            border-radius: 2px;
+            padding: 2px;
+        }
+    </style>
 {% endblock %}
 
 
@@ -108,7 +116,7 @@ Parameters:
             'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-image.js'
             'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-ui.js'
             '@OpenviewTreeRepoBundle/Resources/public/js/uploadSetup.js'
-            'vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.tree.min.js'
+            'vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.nicola.tree.js'
             '@OpenviewTreeRepoBundle/Resources/public/js/foldersTree.js'
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
@@ -147,7 +155,7 @@ Parameters:
                     $('#tree-files').append(s);
                 }
             } else {
-                var s = '<div class="alert alert-info">Folder empty</div>';
+                var s = '<div class="alert alert-info">Cartella vuota</div>';
                 $('#tree-files').append(s);
             }
             //$('#tree-files').append('<div><pre>' + JSON.stringify(elencoJson) + '</pre></div>');
@@ -192,7 +200,7 @@ Parameters:
                 multiSelect: false,
                 cacheItems: true,
                 loadingHTML: '<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
-                'open-icon' : 'icon-folder-close',
+                'open-icon' : 'icon-folder-open',
                 'close-icon' : 'icon-folder-close',
                 'selectable' : true,
                 'selected-icon' : 'icon-ok',
