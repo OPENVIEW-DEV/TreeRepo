@@ -119,6 +119,8 @@ Parameters:
             Aggiorna l'elenco dei file e l'albero delle cartelle dopo il clic su una cartella
         */
         function updateActiveDir(data) {
+            // cancello tutti i file selezionati per l'upload
+            $('tr.template-upload').empty();
             // imposto i dati della directory nell'elenco file
             $('#tree-files').data('parentid', data.id);         // aggiorna parent-id in elenco file nella cartella
             $('#btn-newfolder').data('parentid', data.id);      // aggiorna parent id in pulsante nuova cartella
@@ -198,7 +200,10 @@ Parameters:
             });
             updateActiveDir({'parentid':null, 'name':'/'});         // aggiorna elenco file in directory iniziale
             
-            /* quando apro o chiudo una cartella */
+            /* 
+             * quando apro o chiudo una cartella 
+             * 
+             * */
             $('#tree-folders').on('opened', function (evt, data) {
                 updateActiveDir(data);
             });
