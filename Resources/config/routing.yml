@@ -1,13 +1,16 @@
+# mostra la finestra del browser di file/cartelle
 openview_treerepo_node_index:
     pattern:  /repo/browse/{nodeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Node:index, nodeid: null }
 
+# ritorna elenco directory figlie della dir. passata
 openview_treerepo_node_rpclistdir:
     pattern:  /repo/listdir/{nodeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Node:rpcListDir, nodeid: null }
     options:
         expose: true
 
+# ritorna elenco file in una directory
 openview_treerepo_node_rpclistfile:
     pattern:  /repo/listfile/{nodeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Node:rpcListFile, nodeid: null }
@@ -27,4 +30,9 @@ openview_treerepo_node_newfolder:
     options:
         expose: true
 
-    
+# mostra il wizard per modificare i metadata dei nodi
+openview_treerepo_metadata_editwizard:
+    pattern:  /repo/node/metadatawizard/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:editWizard, nodeid: null }
+    options:
+        expose: true

@@ -2,6 +2,7 @@ breadcrumbs:
     repository: Repository
     newfolder:  Nuova cartella
     uploadfile: Caricamento file
+    metadatawizard: Modifica documento
     
 toolbar:
     uplevel:    Risali
@@ -29,4 +30,16 @@ pages:
             uploadall: Invia tutti
             reset: Pulisci
             delete: Elimina
+    metadatawizard:
+        title: Modifica informazioni documento
+        datigenerici:
+            title: Dati generici
+            name: Nome documento
+            nametip: Nome visualizzato del documento
+            filetype: Tipo di documento
+            filetypetip: Selezionare il tipo di documento
+        metadata:
+            title: Metadati
+        finito:
+            title: Finito!
     

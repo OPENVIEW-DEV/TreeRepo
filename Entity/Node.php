@@ -4,6 +4,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Openview\TreeRepoBundle\Entity\NodeRevision;
+use Openview\TreeRepoBundle\Entity\FileType;
 
 /**
  * Class representing a node in the repository tree. Can be a Directory or a file,
@@ -94,7 +95,7 @@ class Node {
      */
     protected $metadata;
     /**
-     * @ORM\ManyToOne(targetEntity="FileType", inversedBy="nodes")
+     * @ORM\ManyToOne(targetEntity="Openview\TreeRepoBundle\Entity\FileType", inversedBy="nodes")
      * @ORM\JoinColumn(name="filetype", referencedColumnName="id")
      */
     protected $filetype;
