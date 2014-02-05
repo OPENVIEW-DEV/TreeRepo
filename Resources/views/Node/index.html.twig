@@ -90,12 +90,21 @@ Parameters:
                             </div>
                         </div>
                         <span class="fileupload-process"></span>
-                        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                     </div>
                     <div class="widget-main padding-8">
-                        <div class="tree" id="tree-files">
-                            <!-- ajax-populated -->
-                        </div>
+                        <table id="filestable"
+                               class="table table-striped table-bordered table-hover dataTable">
+                            <thead>
+                                <tr>
+                                    <th class="sorting_disabled">Nome</th>
+                                    <th class="sorting_disabled">Tipo</th>
+                                    <th class="center sorting_disabled col-md-2">Azioni</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tree-files">
+                                <!-- Automagically polupulated list -->
+                            </tbody>
+                        </table>
                     </div>
                     </form>
                 </div>
@@ -115,6 +124,8 @@ Parameters:
             'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-process.js'
             'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-image.js'
             'vendor/blueimp/jQuery-File-Upload-9.5.4/js/jquery.fileupload-ui.js'
+            'vendor/ace-ui-1.2-bs3/js/jquery.dataTables.min.js'
+            'vendor/ace-ui-1.2-bs3/js/jquery.dataTables.bootstrap.js'
             '@OpenviewTreeRepoBundle/Resources/public/js/uploadSetup.js'
             'vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.nicola.tree.js'
             '@OpenviewTreeRepoBundle/Resources/public/js/foldersTree.js'
@@ -158,11 +169,14 @@ Parameters:
             // se ho elemento da mostrare
             if (elencoJson.data.length > 0) {
                 for (var i=0; i<elencoJson.data.length; i++) {
-                    var s = '<div class="tree-item">' +
-                        '<div class="tree-item-name">' + 
-                        '<i class="icon icon-file-alt"></i>' +
-                        elencoJson.data[i].name +
-                        '</div></div>';
+                    var s = '<tr>' +
+                        '<td><i class="icon icon-file-alt"></i> ' +
+                        elencoJson.data[i].name + '</td>' +
+                        '<td></td>' +
+                        '<td class="center"><i class="icon icon-zoom-in bigger-120 blue"></i> ' +
+                            '<i class="icon icon-edit bigger-120 blue"></i> ' +
+                            '<i class="icon icon-trash bigger-120 red"></i></td>' +
+                        '</tr>';
                     $('#tree-files').append(s);
                 }
             } else {
@@ -205,6 +219,13 @@ Parameters:
         }
         
         jQuery(function($){
+            // applica datatable
+            $('#filestable').dataTable({
+                "bFilter": false,
+                "bInfo": false,
+                "bPaginate": false,
+                "bSort": false
+            });
             // applica treeview
             $('#tree-folders').ace_tree({
                 dataSource: new DataSourceTree({ url: Routing.generate('openview_treerepo_node_rpclistdir', null) }),
