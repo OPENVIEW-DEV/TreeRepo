@@ -91,7 +91,7 @@ $(function () {
             var file = filesList[i];
             var fileName = file['name'];
             var parentId = $('#btn-newfolder').data('parentid');
-            console.log('Elaboro file: ' + fileName + ' con parent: ' + parentId);
+            //console.log('Elaboro file: ' + fileName + ' con parent: ' + parentId);
             var url = Routing.generate('openview_treerepo_node_rpcaddnode', {
                 'parentid': parentId,
                 'filename': fileName

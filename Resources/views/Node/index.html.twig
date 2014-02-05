@@ -90,8 +90,11 @@ Parameters:
                             </div>
                         </div>
                         <span class="fileupload-process"></span>
+                        <!-- The table listing the files available for upload/download -->
+                        <table role="presentation" class="table table-striped"><tbody class="files"></tbody></table>
                     </div>
                     <div class="widget-main padding-8">
+                        <!--div id="tree-files"></div-->
                         <table id="filestable"
                                class="table table-striped table-bordered table-hover dataTable">
                             <thead>
@@ -102,7 +105,6 @@ Parameters:
                                 </tr>
                             </thead>
                             <tbody id="tree-files">
-                                <!-- Automagically polupulated list -->
                             </tbody>
                         </table>
                     </div>
@@ -260,19 +262,6 @@ Parameters:
                 }
                 // costruisce URL dove andare
                 var url = Routing.generate('openview_treerepo_node_newfolder', {'nodeid': parentid });
-                //console.log('url: ' + url);
-                // manda a quell'URL
-                window.location = url;
-            });
-            /* se clicco il btn per uploadare un file */
-            $('#btn-upload').click(function(e) {
-                // legge parent id
-                var parentid = $(this).data('parentid');
-                if (parentid == 'undefined') {
-                    parentid = null;
-                }
-                // costruisce URL dove andare
-                var url = Routing.generate('openview_treerepo_node_uploadfile', {'parentid': parentid });
                 //console.log('url: ' + url);
                 // manda a quell'URL
                 window.location = url;
