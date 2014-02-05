@@ -57,27 +57,6 @@ $(function () {
     
     
     
-    /*
-     * Intercetto evento di aggiunta file 
-     * Vedi: https://github.com/blueimp/jQuery-File-Upload/issues/2200
-     */
-    /*$('#fileupload').bind('fileuploadadded', function(e, data) {
-        // avvia direttamente upload
-        if (fileList == '') {
-            fileList = data;
-        } else {
-            fileList.files.push(data.files[0]);
-            fileList.originalFiles.push(data.originalFiles[0]);
-        }
-        $('#fileupload').fileupload('send', {'files': fileList.files})
-            .success(function (result, textStatus, jqXHR) {
-                console.log('Upload completato con successo, aggiorno elenco file');
-                setTimeout(function(){aggiornaElencoFile()}, 1000);
-            });
-    });*/
-    
-    
-    
     /* 
      * Intercetto evento upload completato (di un file o nessuno, all'avvio)
      * - leggo info sul file: filename, parentid

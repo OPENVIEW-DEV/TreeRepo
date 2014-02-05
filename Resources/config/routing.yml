@@ -27,10 +27,4 @@ openview_treerepo_node_newfolder:
     options:
         expose: true
 
-openview_treerepo_node_uploadfile:
-    pattern:  /repo/node/upload/{parentid}
-    defaults: { _controller: OpenviewTreeRepoBundle:Upload:fileUpload, parentid: null }
-    methods:  [POST, GET]
-    options:
-        expose: true
     
