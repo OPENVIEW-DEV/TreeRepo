@@ -8,7 +8,7 @@ class FileTypeType extends AbstractType {
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'choice');
+        $builder->add('name');
     }
     
     

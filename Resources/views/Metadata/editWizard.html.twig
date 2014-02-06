@@ -71,7 +71,7 @@ Parameters:
                                     <div class="form-group">
                                         <label class="col-xs-12 col-sm-3 control-label no-padding-right">{{ 'pages.metadatawizard.datigenerici.filetype' | trans }}</label>
                                         <div class="col-xs-12 col-sm-9">
-                                            {{ form_widget(form.filetype.name, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
+                                            {{ form_widget(form.filetype, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
                                             <span class="help-inline col-xs-12 col-sm-7">
                                                 {{ 'pages.metadatawizard.datigenerici.filetypetip' | trans }}
                                             </span>
@@ -82,6 +82,16 @@ Parameters:
                             </div>
                             <div id="step2" class="step-pane">
                                 <h3 class="lighter block green">{{ 'pages.metadatawizard.metadata.title' | trans }}</h3>
+                                <div class="row">
+                                    <div class="col-md-2 col-md-offset-10">
+                                        <button class="btn btn-primary col-md-12">
+                                            <i class="icon icon-table"></i> {{ 'pages.metadatawizard.metadata.edit' | trans }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <div id="properties-container">
+                                    <!-- Automagically populated -->
+                                </div>
                             </div>
                             <div id="step3" class="step-pane">
                                 <h3 class="lighter block green">{{ 'pages.metadatawizard.finito.title' | trans }}</h3>
@@ -89,13 +99,11 @@ Parameters:
                         </div>
                         <hr>
                         <div class="row-fluid wizard-actions">
-                            <button class="btn btn-prev" disabled="disabled">
-                                <i class="icon-arrow-left"></i>
-                                Prev
+                            <button id="btn-prev" class="btn btn-prev" disabled="disabled">
+                                <i class="icon-arrow-left"></i> Prev
                             </button>
-                            <button data-last="Finish " class="btn btn-success btn-next">
-                                Next
-                                <i class="icon-arrow-right icon-on-right"></i>
+                            <button id="btn-next" data-last="Finish " class="btn btn-success btn-next">
+                                Next <i class="icon-arrow-right icon-on-right"></i>
                             </button>
                         </div>
                     </div><!-- /widget-main -->
@@ -116,6 +124,47 @@ Parameters:
     <script>
         $(document).ready(function() {
             $('#fuelux-wizard').ace_wizard();
+            
+            // al cambio tipo di file, salva nel DB il nuovo tipo
+            $('#treerepo_node_metadata_filetype').change(function(){
+                // disabilito pulsante next
+                $('#btn-next').attr('disabled', 'disabled');
+                // avvio la chiamata ajax
+                var nodeid = $('#treerepo_node_metadata_id').val();
+                var filetypeid = $('#treerepo_node_metadata_filetype').val();
+                $.ajax({
+                    url: Routing.generate('openview_treerepo_metadata_rpcsetfiletype', {'nodeid': nodeid, 'filetypeid': filetypeid})
+                }).fail(function(){
+                    alert('Errore: dati non salvati');
+                }).always(function() {
+                    // riabilito il pulsante next
+                    $('#btn-next').attr('disabled', false);
+                });
+            });
+            
+            // al cambio di step
+            $('#fuelux-wizard').on('changed', function(){
+                // legge step attivo
+                var activeStep = $('.wizard-steps > .active').data('target');
+                // se sono al passo 2 mostro i metadata e propongo di inserirli
+                if (activeStep === '#step2') {
+                    // disabilito pulsante next
+                    $('#btn-next').attr('disabled', 'disabled');
+                    // legge il contenuto della schermata con i metadata
+                    var nodeid = $('#treerepo_node_metadata_id').val();
+                    $.ajax({
+                        url: Routing.generate('openview_treerepo_metadata_rpcgetmetadata', {'nodeid': nodeid})
+                    }).done(function(htmlCode){
+                        $('#properties-container').append(htmlCode);
+                    }).fail(function(){
+                        alert('Errore di comunizazione');
+                    }).always(function() {
+                        // riabilito il pulsante next
+                        $('#btn-next').attr('disabled', false);
+                    });
+                }
+            });
+            
         });
     </script>
 {% endblock %}

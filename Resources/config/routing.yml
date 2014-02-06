@@ -36,3 +36,15 @@ openview_treerepo_metadata_editwizard:
     defaults: { _controller: OpenviewTreeRepoBundle:Metadata:editWizard, nodeid: null }
     options:
         expose: true
+
+openview_treerepo_metadata_rpcsetfiletype:
+    pattern:  /repo/node/metadatawizard/rpcsetfiletype/{nodeid}/{filetypeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:rpcSetFiletype }
+    options:
+        expose: true
+
+openview_treerepo_metadata_rpcgetmetadata:
+    pattern:  /repo/node/metadatawizard/rpcgetmetadata/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:rpcGetMetadata }
+    options:
+        expose: true

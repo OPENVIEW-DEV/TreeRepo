@@ -3,16 +3,26 @@ namespace Openview\TreeRepoBundle\Form\Type;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolverInterface;
-use Openview\TreeRepoBundle\Form\Type\FileTypeType;
 
 class MetadataType extends AbstractType {
+    protected $doctrine;
+    
+    
+    public function __construct($doctrine) {
+        $this->doctrine = $doctrine;
+    }
+    
     
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', array(
             'required' => true,
         ));
-        $builder->add('filetype', new FileTypeType());
+        $builder->add('filetype', 'entity', array(
+                'class' => 'OpenviewTreeRepoBundle:FileType',
+                'property' => 'name',
+            ));
+        
         $builder->add('id', 'hidden');
     }
     

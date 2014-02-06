@@ -1,0 +1,63 @@
+{#
+Display the wizard to edit a Node's metadata
+Parameters:
+- node - the node to be edited
+#}
+{% extends '::base.html.twig' %}
+{% trans_default_domain 'treerepo' %}
+
+
+
+
+{% block breadcrumbs %}
+    <li class="active">
+        <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+    </li>
+    <li class="active">
+        <a href="{{ url('openview_treerepo_node_index') }}">{{ 'breadcrumbs.repository' | trans }}</a>
+    </li>
+    <li class="active">
+        {{ 'breadcrumbs.metadatawizard' | trans }}
+    </li>
+{% endblock %}
+    
+    
+
+{% block content %}
+<div class="col-xs-12">
+    <!-- Title -->
+    <div class="page-header">
+        <h1>Elenco filetype</h1>
+    </div>
+    <div class="row">
+        {% for item in items %}
+        <div class="row">
+            {{ item.id }} - {{ item.name }} 
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="page-header">
+        <h1>Form filetype</h1>
+    </div>
+    <div class="row">
+        {{ form(form) }}
+    </div>
+    
+    
+</div>
+{% endblock %}
+
+
+{% block javascripts %}
+    {% javascripts 
+            'vendor/ace-ui-1.2-bs3/js/fuelux/fuelux.wizard.min.js'
+        %}
+        <script type="text/javascript" src="{{ asset_url }}"></script>
+    {% endjavascripts %}
+    <script>
+        $(document).ready(function() {
+            $('#fuelux-wizard').ace_wizard();
+        });
+    </script>
+{% endblock %}

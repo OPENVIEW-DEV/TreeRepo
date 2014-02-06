@@ -63,6 +63,21 @@ class FileType {
         $this->templateName = $templateName;
         return $this;
     }
+    public function getNodes() {
+        return $this->nodes;
+    }
+
+    public function addNodes($node) {
+        $this->nodes[] = $node;
+        return $this;
+    }
+    
+    public function removeNodes($node) {
+        $this->nodes->removeElement($node);
+        return $this;
+    }
+
+
 
 
 

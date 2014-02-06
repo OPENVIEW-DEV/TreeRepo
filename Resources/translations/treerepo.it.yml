@@ -40,6 +40,7 @@ pages:
             filetypetip: Selezionare il tipo di documento
         metadata:
             title: Metadati
+            edit: Modifica metadati
         finito:
             title: Finito!
     

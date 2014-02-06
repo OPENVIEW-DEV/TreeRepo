@@ -39,7 +39,7 @@ function mostraElencoFile(elencoJson) {
                 '<td></td>' +
                 '<td class="center"><i class="icon icon-zoom-in bigger-120 blue"></i> ' +
                     '<a href="' + Routing.generate('openview_treerepo_metadata_editwizard', {'nodeid': elencoJson.data[i].id}) + '"><i class="icon icon-edit bigger-120 blue"></i></a> ' +
-                    '<i class="icon icon-trash bigger-120 red"></i></td>' +
+                    '<i class="icon icon-trash bigger-120 red"></i></td>' + 
                 '</tr>';
             $('#tree-files').append(s);
         }
