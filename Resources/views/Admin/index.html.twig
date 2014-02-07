@@ -1,0 +1,41 @@
+{#
+Show the administration panel for the treerepo
+#}
+{% extends '::base.html.twig' %}
+{% trans_default_domain 'treerepo' %}
+
+
+
+
+{% block breadcrumbs %}
+    <li class="active">
+        <a href="{{ url('openview_doc_browser_index') }}"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+    </li>
+    <li class="active">
+        <a href="{{ url('openview_treerepo_node_index') }}">{{ 'breadcrumbs.repository' | trans }}</a>
+    </li>
+    <li class="active">
+        {{ 'breadcrumbs.admin' | trans }}
+    </li>
+{% endblock %}
+    
+    
+
+{% block content %}
+<div class="container">
+    <!-- Title -->
+    <div class="page-header">
+        <h1>{{ 'pages.admin.title' | trans }}</h1>
+    </div>
+    
+    <div class="row">
+        <div class="col-xs-12 col-md-2 col-md-offset-5">
+            <a class="btn btn-lg" href="{{ url('openview_dyndoctemplate_index') }}">
+                <i class="icon icon-sitemap"></i> {{ 'pages.admin.dyndoctpl' | trans }}
+            </a>
+        </div>
+    </div>
+</div>        
+{% endblock %}
+
+

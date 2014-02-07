@@ -3,6 +3,7 @@ breadcrumbs:
     newfolder:  Nuova cartella
     uploadfile: Caricamento file
     metadatawizard: Modifica documento
+    admin: Impostazioni
     
 toolbar:
     uplevel:    Risali
@@ -14,6 +15,7 @@ pages:
         title:  Archivio
         folderstitle: Sfoglia le cartelle
         filestitle: Contenuto di
+        btnadmin: Impostazioni
     newfolder:
         title:  Creazione nuova cartella
         form:
@@ -43,4 +45,7 @@ pages:
             edit: Modifica metadati
         finito:
             title: Finito!
+    admin:
+        title: Impostazioni TreeRepo
+        dyndoctpl: Gestione template
     

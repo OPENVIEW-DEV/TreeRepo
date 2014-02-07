@@ -1,12 +1,25 @@
 {# rendering della parte di pagina che mostra i metadata 
 Parametri:
-
+items: array di valori da mostrare
+    ogni item: name, type, value, availablevalues[]
 #}
-<div class="row">
+{% if items | length > 0 %}
+    {% for item in items %}
+        <div class="row">
+            <label class="col-md-4">{{ item.name }}</label>
+            <div class="col-md-8 muted">{{ item.value }}</div>
+        </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        Nessun metadato disponibile
+    </div>
+{% endif %}
+<!--div class="row">
     <label class="col-md-4">Label 1</label>
     <div class="col-md-8 muted">Value 1</div>
 </div>
 <div class="row">
     <label class="col-md-4">Label 2</label>
     <div class="col-md-8 muted">Value 2</div>
-</div>
+</div-->

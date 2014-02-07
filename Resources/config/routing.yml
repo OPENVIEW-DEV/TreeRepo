@@ -3,6 +3,35 @@ openview_treerepo_node_index:
     pattern:  /repo/browse/{nodeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Node:index, nodeid: null }
 
+openview_treerepo_node_newfolder:
+    pattern:  /repo/node/newfolder/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:newFolder, nodeid: null }
+    options:
+        expose: true
+
+# mostra il wizard per modificare i metadata dei nodi
+openview_treerepo_metadata_editwizard:
+    pattern:  /repo/node/metadatawizard/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:editWizard, nodeid: null }
+    options:
+        expose: true
+
+# lancia edit/creazione dynamic document con i metadata di un nodo
+openview_treerepo_metadata_edit:
+    pattern:  /repo/node/metadatawizard/edit/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:edit }
+
+# lancia eliminazione dynamic document con i metadata di un nodo
+openview_treerepo_metadata_delete:
+    pattern:  /repo/node/metadatawizard/delete/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:delete }
+    
+
+#
+# rpc per chiamate ajax
+#
+
+
 # ritorna elenco directory figlie della dir. passata
 openview_treerepo_node_rpclistdir:
     pattern:  /repo/listdir/{nodeid}
@@ -24,19 +53,6 @@ openview_treerepo_node_rpcaddnode:
     options:
         expose: true
 
-openview_treerepo_node_newfolder:
-    pattern:  /repo/node/newfolder/{nodeid}
-    defaults: { _controller: OpenviewTreeRepoBundle:Node:newFolder, nodeid: null }
-    options:
-        expose: true
-
-# mostra il wizard per modificare i metadata dei nodi
-openview_treerepo_metadata_editwizard:
-    pattern:  /repo/node/metadatawizard/{nodeid}
-    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:editWizard, nodeid: null }
-    options:
-        expose: true
-
 openview_treerepo_metadata_rpcsetfiletype:
     pattern:  /repo/node/metadatawizard/rpcsetfiletype/{nodeid}/{filetypeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Metadata:rpcSetFiletype }
@@ -48,3 +64,11 @@ openview_treerepo_metadata_rpcgetmetadata:
     defaults: { _controller: OpenviewTreeRepoBundle:Metadata:rpcGetMetadata }
     options:
         expose: true
+        
+        
+#
+# area amministrativa
+#
+openview_treerepo_admin:
+    pattern:  /admin/repo/index.html
+    defaults: { _controller: OpenviewTreeRepoBundle:Admin:index }

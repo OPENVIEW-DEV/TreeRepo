@@ -24,92 +24,100 @@ Parameters:
     
 
 {% block content %}
-<div class="col-xs-12">
+<div class="container">
     <!-- Title -->
     <div class="page-header">
         <h1>{{ 'pages.metadatawizard.title' | trans }}</h1>
     </div>
     
-    <div class="row-fluid">
-        <div class="span12">
-            <div class="widget-box">
-                <div class="widget-header widget-header-blue widget-header-flat">
-                    <h4 class="lighter">{{ node.name }}</h4>
-                </div>
-                <div class="widget-body">
-                    <div class="widget-main">
-                        <div data-target="#step-container" class="row-fluid" id="fuelux-wizard">
-                            <ul class="wizard-steps">
-                                <li class="active" data-target="#step1">
-                                    <span class="step">1</span>
-                                    <span class="title">Informazioni generali</span>
-                                </li>
-                                <li data-target="#step2">
-                                    <span class="step">2</span>
-                                    <span class="title">Metadati</span>
-                                </li>
-                                <li data-target="#step3">
-                                    <span class="step">3</span>
-                                    <span class="title">Finito</span>
-                                </li>
-                            </ul>
-                        </div>
-                        <hr>
-                        <div id="step-container" class="step-content row-fluid position-relative">
-                            <div id="step1" class="step-pane active">
-                                <h3 class="lighter block green">{{ 'pages.metadatawizard.datigenerici.title' | trans }}</h3>
-                                <form class='form-horizontal'>
-                                    <div class="form-group">
-                                        <label class="col-xs-12 col-sm-3 control-label no-padding-right">{{ 'pages.metadatawizard.datigenerici.name' | trans }}</label>
-                                        <div class="col-xs-12 col-sm-9">
-                                            {{ form_widget(form.name, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
-                                            <span class="help-inline col-xs-12 col-sm-7">
-                                                {{ 'pages.metadatawizard.datigenerici.nametip' | trans }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="col-xs-12 col-sm-3 control-label no-padding-right">{{ 'pages.metadatawizard.datigenerici.filetype' | trans }}</label>
-                                        <div class="col-xs-12 col-sm-9">
-                                            {{ form_widget(form.filetype, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
-                                            <span class="help-inline col-xs-12 col-sm-7">
-                                                {{ 'pages.metadatawizard.datigenerici.filetypetip' | trans }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    {{ form_rest(form) }}
-                                </form>
-                            </div>
-                            <div id="step2" class="step-pane">
-                                <h3 class="lighter block green">{{ 'pages.metadatawizard.metadata.title' | trans }}</h3>
-                                <div class="row">
-                                    <div class="col-md-2 col-md-offset-10">
-                                        <button class="btn btn-primary col-md-12">
-                                            <i class="icon icon-table"></i> {{ 'pages.metadatawizard.metadata.edit' | trans }}
-                                        </button>
-                                    </div>
-                                </div>
-                                <div id="properties-container">
-                                    <!-- Automagically populated -->
-                                </div>
-                            </div>
-                            <div id="step3" class="step-pane">
-                                <h3 class="lighter block green">{{ 'pages.metadatawizard.finito.title' | trans }}</h3>
-                            </div>
-                        </div>
-                        <hr>
-                        <div class="row-fluid wizard-actions">
-                            <button id="btn-prev" class="btn btn-prev" disabled="disabled">
-                                <i class="icon-arrow-left"></i> Prev
-                            </button>
-                            <button id="btn-next" data-last="Finish " class="btn btn-success btn-next">
-                                Next <i class="icon-arrow-right icon-on-right"></i>
-                            </button>
-                        </div>
-                    </div><!-- /widget-main -->
-                </div><!-- /widget-body -->
-            </div>
+    <div class="widget-box">
+        <div class="widget-header widget-header-blue widget-header-flat">
+            <h4 class="lighter">{{ node.name }}</h4>
         </div>
+        <div class="widget-body">
+            <div class="widget-main">
+                <div data-target="#step-container" class="row-fluid" id="fuelux-wizard">
+                    <ul class="wizard-steps">
+                        <li class="active" data-target="#step1">
+                            <span class="step">1</span>
+                            <span class="title">Informazioni generali</span>
+                        </li>
+                        <li data-target="#step2">
+                            <span class="step">2</span>
+                            <span class="title">Metadati</span>
+                        </li>
+                        <li data-target="#step3">
+                            <span class="step">3</span>
+                            <span class="title">Finito</span>
+                        </li>
+                    </ul>
+                </div>
+                <hr>
+                <div id="step-container" class="step-content row-fluid position-relative">
+                    <div id="step1" class="step-pane active">
+                        <h3 class="lighter block green">{{ 'pages.metadatawizard.datigenerici.title' | trans }}</h3>
+                        <form class='form-horizontal'>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">{{ 'pages.metadatawizard.datigenerici.name' | trans }}</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    {{ form_widget(form.name, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
+                                    <span class="help-inline col-xs-12 col-sm-7">
+                                        {{ 'pages.metadatawizard.datigenerici.nametip' | trans }}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-12 col-sm-3 control-label no-padding-right">{{ 'pages.metadatawizard.datigenerici.filetype' | trans }}</label>
+                                <div class="col-xs-12 col-sm-9">
+                                    {{ form_widget(form.filetype, { 'attr': {'class': 'col-xs-10 col-sm-5'} }) }}
+                                    <span class="help-inline col-xs-12 col-sm-7">
+                                        {{ 'pages.metadatawizard.datigenerici.filetypetip' | trans }}
+                                    </span>
+                                </div>
+                            </div>
+                            {{ form_rest(form) }}
+                        </form>
+                    </div>
+                    <div id="step2" class="step-pane">
+                        <h3 class="lighter block green">{{ 'pages.metadatawizard.metadata.title' | trans }}
+                            {# avvia edit metadati #}
+                            {% if node.metadata is null %}
+                                {# non ho metadati, aggiungo pulsante x creare documento #}
+                                <a href="{{ url('openview_treerepo_metadata_edit', {'nodeid':node.id}) }}"
+                                    title="{{ 'pages.metadatawizard.metadata.create' | trans }}">
+                                     <i class="icon icon-magic smaller-75"></i>
+                                </a>
+                            {% else %}
+                                {# non ho metadati, aggiungo pulsante x modificarli e per eliminarli #}
+                                <a href="{{ url('openview_treerepo_metadata_edit', {'nodeid':node.id}) }}"
+                                    title="{{ 'pages.metadatawizard.metadata.edit' | trans }}">
+                                     <i class="icon icon-edit smaller-75"></i>
+                                </a>
+                                <a href="{{ url('openview_treerepo_metadata_delete', {'nodeid':node.id}) }}"
+                                    title="{{ 'pages.metadatawizard.metadata.delete' | trans }}">
+                                     <i class="icon icon-trash smaller-75"></i>
+                                </a>
+                            {% endif %}
+                        </h3>
+                        <div id="properties-container">
+                            <!-- Automagically populated -->
+                        </div>
+                    </div>
+                    <div id="step3" class="step-pane">
+                        <h3 class="lighter block green">{{ 'pages.metadatawizard.finito.title' | trans }}</h3>
+                    </div>
+                </div>
+                <hr>
+                <div class="row-fluid wizard-actions">
+                    <button id="btn-prev" class="btn btn-prev" disabled="disabled">
+                        <i class="icon-arrow-left"></i> Prev
+                    </button>
+                    <button id="btn-next" data-last="Finish " class="btn btn-success btn-next">
+                        Next <i class="icon-arrow-right icon-on-right"></i>
+                    </button>
+                </div>
+            </div><!-- /widget-main -->
+        </div><!-- /widget-body -->
     </div>
 </div>
 {% endblock %}
