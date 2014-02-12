@@ -4,6 +4,8 @@ breadcrumbs:
     uploadfile: Caricamento file
     metadatawizard: Modifica documento
     admin: Impostazioni
+    metadataedit: Metadati
+    metadatadyndoc: Metadati
     
 toolbar:
     uplevel:    Risali
@@ -45,6 +47,10 @@ pages:
             edit: Modifica metadati
         finito:
             title: Finito!
+    metadataedit:
+        title: Assegna metadati
+    metadatadyndoc:
+        title: Metadati
     admin:
         title: Impostazioni TreeRepo
         dyndoctpl: Gestione template

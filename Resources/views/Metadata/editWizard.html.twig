@@ -158,15 +158,22 @@ Parameters:
                 if (activeStep === '#step2') {
                     // disabilito pulsante next
                     $('#btn-next').attr('disabled', 'disabled');
+                    // mostro elemento per attesa interrogazione ajax
+                    $('#properties-container').empty();
+                    $('#properties-container').append('<div id="attesa-metadata" class="center muted">Serching for metadata...</div>');
                     // legge il contenuto della schermata con i metadata
                     var nodeid = $('#treerepo_node_metadata_id').val();
                     $.ajax({
                         url: Routing.generate('openview_treerepo_metadata_rpcgetmetadata', {'nodeid': nodeid})
                     }).done(function(htmlCode){
+                        $('#properties-container').empty();
                         $('#properties-container').append(htmlCode);
                     }).fail(function(){
-                        alert('Errore di comunizazione');
+                        $('#properties-container').empty();
+                        $('#properties-container').append('<div class="alert alert-info">Impossibile leggere i metadati</div>');
                     }).always(function() {
+                        // cancello messaggio di attesa interrogazione ajax
+                        $('#attesa-metadata').remove();
                         // riabilito il pulsante next
                         $('#btn-next').attr('disabled', false);
                     });

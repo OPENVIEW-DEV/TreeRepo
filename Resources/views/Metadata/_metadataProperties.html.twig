@@ -4,12 +4,19 @@ items: array di valori da mostrare
     ogni item: name, type, value, availablevalues[]
 #}
 {% if items | length > 0 %}
-    {% for item in items %}
-        <div class="row">
-            <label class="col-md-4">{{ item.name }}</label>
-            <div class="col-md-8 muted">{{ item.value }}</div>
-        </div>
-    {% endfor %}
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr><td>Proprietà</td><td>Valore</td></tr>
+        </thead>
+        <tbody>
+        {% for item in items %}
+            <tr>
+                <td>{{ item.label }}</td>
+                <td>{{ item.value }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% else %}
     <div class="alert alert-info">
         Nessun metadato disponibile

@@ -8,6 +8,7 @@ use Openview\TreeRepoBundle\Form\Type\MetadataType;
 use Openview\TreeRepoBundle\Entity\FileType;
 use Openview\DynamicDocumentBundle\Document\DynamicDocument;
 use Openview\DynamicDocumentBundle\Document\DynamicDocumentStructureTemplate;
+use Symfony\Bundle\FrameworkBundle\Client;
 
 /**
  * Manages metadata for a specific Node
@@ -51,20 +52,55 @@ class MetadataController extends Controller
             // se non esiste il documento, lo si crea
             if ($node->getMetadata() === null) {
                 // cerca template id
-                $tplName = $node->getFiletype()->getTemplateName();
-                $template = $this->get('doctrine_mongodb')
-                        ->getRepository('OpenviewDynamicDocumentBundle:DynamicDocumentStructureTemplate')
-                        ->findOneBy(array('name'=>$tplName));
-                // se il template esiste
-                if ($template) {
-                    //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($template); exit;
-                    return $this->redirect($this->generateUrl('openview_dyndoc_formnew', array('templateid'=>$template->getId())));
-                }
-                // se il template non esiste
-                else {
+                if ($node->getFiletype() !== null) {
+                    $tplName = $node->getFiletype()->getTemplateName();
+                    $template = $this->get('doctrine_mongodb')
+                            ->getRepository('OpenviewDynamicDocumentBundle:DynamicDocumentStructureTemplate')
+                            ->findOneBy(array('name'=>$tplName));
+                    // se il template esiste
+                    if ($template) {
+                        //esempio: http://ov_intranet.nicola-dev.openview.lan/app_dev.php/repo/node/metadatawizard/edit/28
+                        //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($template); exit;
+                        // crea documento vuoto da template, via REST
+                        $url = $this->generateUrl(
+                                    'api_1_dyndoc_get_newdocbytemplate', 
+                                    array('templateid'=>$template->getId(), '_format'=>'json'),
+                                    true
+                                );
+                        //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($url); exit;
+                        $curl = curl_init();
+                        curl_setopt($curl, CURLOPT_URL, $url);
+                        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+                        //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($curl); exit;
+                        $result = curl_exec($curl);
+                        //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($result); //exit;
+                        if ($result !== false) {
+                            // associa documento a nodo
+                            $documentArray = json_decode($result, true);
+                            //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($documentArray); exit;
+                            if ((is_array($documentArray)) && (array_key_exists('id', $documentArray))) {
+                                $docId = $documentArray['id'];
+                                $node->setMetadata($docId);
+                                //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($node); exit;
+                                $em = $this->get('doctrine')->getManager();
+                                $em->persist($node);
+                                $em->flush();
+                                //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($node); exit;
+                                // redirect all'editing del documento
+                                return $this->redirect($this->generateUrl('openview_dyndoc_formedit', array('documentid'=>$node->getMetadata())));
+                            }
+                        }
+                    }
+                    // se il template non esiste
+                    else {
+                        $this->get('session')->getFlashBag()->add(
+                            'info',
+                            'Template not found: ' . $tplName);
+                    }
+                } else {
                     $this->get('session')->getFlashBag()->add(
-                        'info',
-                        'Template not found: ' . $tplName);
+                            'info',
+                            'Il documento non ha un tipo assegnato.');
                 }
             }
             // se invece esiste, lo si modifica
@@ -77,6 +113,7 @@ class MetadataController extends Controller
                 'warning',
                 $this->get('translator')->trans('msg.editko') . ': ' . $e->getMessage());
         }
+        exit;
         return $this->redirect($this->generateUrl('openview_treerepo_metadata_editwizard', array('nodeid'=>$nodeid)));
     }
     
@@ -97,6 +134,9 @@ class MetadataController extends Controller
             $em->flush();
             // cancella dyndoc con metadati
             $dyndoc = $this->get('doctrine_mongodb')->getRepository('OpenviewDynamicDocumentBundle:DynamicDocument')->find($metadataDoc);
+            $dm = $this->get('doctrine_mongodb')->getManager();
+            $dm->remove($dyndoc);
+            $dm->flush();
             // segnala eliminazione riuscita
             $this->get('session')->getFlashBag()->add(
                 'success',
@@ -149,23 +189,54 @@ class MetadataController extends Controller
      */
     public function rpcGetMetadataAction($nodeid) {
         // istanzia nodo e filetype
-        $node = $this->getDoctrine()->getRepository('OpenviewTreeRepoBundle:Node')
+        $node = $this->getDoctrine()
+                ->getRepository('OpenviewTreeRepoBundle:Node')
                 ->find($nodeid);
         if ($node !== false) {
             $items = array();
             if ($node->getMetadata() !== null) {
-                // legge campi da DynDoc in un array
-                // ritorna template che mostra l'elenco (privo di header eccetera)
-                return $this->render('OpenviewTreeRepoBundle:Metadata:_metadataProperties.html.twig', array('items'=>$items));
-            } else {
-                // ritorna template con elenco vuoto
-                return $this->render('OpenviewTreeRepoBundle:Metadata:_metadataProperties.html.twig', array('items'=>$items));
+                // istanzia il dynamic document
+                $document = $this->get('doctrine_mongodb')
+                        ->getRepository('OpenviewDynamicDocumentBundle:DynamicDocument')
+                        ->findOneById($node->getMetadata());
+                $fields = $document->getStructure()->getFields();
+                foreach ($fields as $field) {
+                    //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($field);
+                    $items[] = array(
+                        'label'=>$field->getLabel(),
+                        'type'=>$field->getFieldType(),
+                        'value'=>$field->getValueForTest(),
+                        );
+                }
+                /*echo "<pre>"; \Doctrine\Common\Util\Debug::dump($items, 5);
+                exit;
+                echo "<pre>"; \Doctrine\Common\Util\Debug::dump($document, 5); exit;*/
+                // legge l'array dei campi
             }
-            // temporaneo: ritorna il template con elenco di test
-            return $this->render('OpenviewTreeRepoBundle:Metadata:_metadataProperties.html.twig');
+            return $this->render('OpenviewTreeRepoBundle:Metadata:_metadataProperties.html.twig', array('items'=>$items));
         }
         // altrimenti ritorna errore
         return new Response('Ko', 500);
+    }
+    
+    
+    
+    /**
+     * Ritorna l'ID del nodo avente i metadata nel dyndocid specificato
+     * Quando avrò passato le opzioni al dyndoc potrò eliminare questa azione, insieme con la
+     * sua chiamata in show.html.twig del DynDoc
+     * 
+     * @param type $dyndocid
+     */
+    public function renderNodeIdFromDynDocIdAction($dyndocid) 
+    {
+        $node = $this->getDoctrine()->getRepository('OpenviewTreeRepoBundle:Node')
+                ->findOneBy(array('metadata'=>$dyndocid));
+        if (!$node) {
+            return new Response('');
+        } else {
+            return new Response($node->getId());
+        }
     }
     
     

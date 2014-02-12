@@ -65,6 +65,15 @@ openview_treerepo_metadata_rpcgetmetadata:
     options:
         expose: true
         
+
+#
+# rendering invoacti dai twig
+#
+openview_treerepo_metadata_rendernodeidfromdyndocid:
+    pattern:  /repo/node/metadatawizard/rendernodeidfromdyndocid/{dyndocid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Metadata:renderNodeIdFromDynDocId }
+
+
         
 #
 # area amministrativa
