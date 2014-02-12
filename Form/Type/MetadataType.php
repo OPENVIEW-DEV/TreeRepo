@@ -21,6 +21,7 @@ class MetadataType extends AbstractType {
         $builder->add('filetype', 'entity', array(
                 'class' => 'OpenviewTreeRepoBundle:FileType',
                 'property' => 'name',
+                'empty_value' => 'Choose a filetype',
             ));
         
         $builder->add('id', 'hidden');

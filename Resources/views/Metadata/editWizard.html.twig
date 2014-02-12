@@ -54,6 +54,7 @@ Parameters:
                 </div>
                 <hr>
                 <div id="step-container" class="step-content row-fluid position-relative">
+                    <!-- STEP 1: nome e tipo file -->
                     <div id="step1" class="step-pane active">
                         <h3 class="lighter block green">{{ 'pages.metadatawizard.datigenerici.title' | trans }}</h3>
                         <form class='form-horizontal'>
@@ -78,6 +79,7 @@ Parameters:
                             {{ form_rest(form) }}
                         </form>
                     </div>
+                    <!-- STEP 2: metadata -->
                     <div id="step2" class="step-pane">
                         <h3 class="lighter block green">{{ 'pages.metadatawizard.metadata.title' | trans }}
                             {# avvia edit metadati #}

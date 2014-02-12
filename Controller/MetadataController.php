@@ -200,6 +200,7 @@ class MetadataController extends Controller
                         ->getRepository('OpenviewDynamicDocumentBundle:DynamicDocument')
                         ->findOneById($node->getMetadata());
                 $fields = $document->getStructure()->getFields();
+                // mette i campi in un array
                 foreach ($fields as $field) {
                     //echo "<pre>"; \Doctrine\Common\Util\Debug::dump($field);
                     $items[] = array(
@@ -208,10 +209,6 @@ class MetadataController extends Controller
                         'value'=>$field->getValueForTest(),
                         );
                 }
-                /*echo "<pre>"; \Doctrine\Common\Util\Debug::dump($items, 5);
-                exit;
-                echo "<pre>"; \Doctrine\Common\Util\Debug::dump($document, 5); exit;*/
-                // legge l'array dei campi
             }
             return $this->render('OpenviewTreeRepoBundle:Metadata:_metadataProperties.html.twig', array('items'=>$items));
         }
