@@ -1,0 +1,56 @@
+{#
+Show the search result for the repository
+Parameters:
+- items: found items \Elastica\ResultSet
+#}
+{% extends '::base.html.twig' %}
+{% trans_default_domain 'treerepo' %}
+
+
+
+
+
+
+{% block breadcrumbs %}
+    <li class="active">
+        <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+    </li>
+    <li class="active">
+        {{ 'breadcrumbs.repository' | trans }}
+    </li>
+{% endblock %}
+    
+    
+
+{% block content %}
+<div class="row">
+    <!-- Title -->
+    <div class="page-header">
+        <h1>{{ 'pages.search.title' | trans }}</h1>
+    </div>
+
+    
+    <div class="col-xs-12">
+        <h2 class="lighter blue"><small>Risultati per: {{ terms }}</small></h2>
+    </div>
+    <div class="col-xs-12">
+        {% if items | length > 0 %}
+        <ol class="search-result">
+            {% for item in items %}
+            <li>
+                <h3><a href="">{{ item.hit._source.filename }}</a></h3>
+                <div>
+                    <div class="text-muted">path/to/{{ item.hit._source.filename }}</div>
+                    <div>{{ item.hit._source.length }} bytes</div>
+                </div>
+            </li>
+            {% endfor %}
+        </ol>
+        {% else %}
+            <div class="alert alert-info">{{ 'msg.noitemfound' | trans}}</div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+

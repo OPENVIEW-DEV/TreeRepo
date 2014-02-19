@@ -78,6 +78,7 @@ Parameters:
                                 enctype="multipart/form-data" 
                                 data-url="{{ asset('vendor/blueimp/jQuery-File-Upload-9.5.4/server/php/index.php') }}">
                     <div class="widget-toolbox">
+                        <!-- toolbar -->
                         <div class="btn-toolbar">
                             <div class="btn-group">
                                 <span class="btn btn-sm btn-primary" id="btn-newfolder">
@@ -89,6 +90,19 @@ Parameters:
                                     <span>{{ 'pages.uploadfile.form.addfiles' | trans }}</span>
                                     <input type="file" name="files[]" multiple>
                                 </span>
+                            </div>
+                            <!-- ricerca -->
+                            <div class="btn-group">
+                                <div class="input-group">
+                                    <input class="form-control search-query" id="txt-filesearch"
+                                           placeholder="{{ 'toolbar.filesearch' | trans }}" type="text">
+                                    <span class="input-group-btn">
+                                        <button type="button" class="btn btn-purple btn-sm" id="btn-filesearch"
+                                                disabled="disabled">
+                                            <i class="icon-search"></i>
+                                        </button>
+                                    </span>
+                                </div>
                             </div>
                         </div>
                         <span class="fileupload-process"></span>
@@ -137,4 +151,20 @@ Parameters:
         %}
         <script type="text/javascript" src="{{ asset_url }}"></script>
     {% endjavascripts %}
+        
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('#btn-filesearch').attr('disabled', false);
+            /* avvia la ricerca di un documento */
+            $('#btn-filesearch').click(function(){
+                // se ho una stringa
+                if ($('#txt-filesearch').val() !== '') {
+                    var url = Routing.generate('openview_treerepo_search', {
+                        'terms': $('#txt-filesearch').val()
+                    });
+                    window.location.href = url;
+                }
+            });
+        });
+    </script>
 {% endblock %}

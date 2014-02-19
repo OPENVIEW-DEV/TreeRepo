@@ -11,6 +11,10 @@ toolbar:
     uplevel:    Risali
     upload:     Carica documento
     createdir:  Nuova cartella
+    filesearch: Cerca un documento
+    
+msg:
+    noitemfound: Nessun elemento trovato
     
 pages:
     index:
@@ -54,4 +58,6 @@ pages:
     admin:
         title: Impostazioni TreeRepo
         dyndoctpl: Gestione template
+    search:
+        title: Risultati ricerca
     

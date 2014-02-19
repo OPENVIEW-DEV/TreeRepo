@@ -25,7 +25,14 @@ openview_treerepo_metadata_edit:
 openview_treerepo_metadata_delete:
     pattern:  /repo/node/metadatawizard/delete/{nodeid}
     defaults: { _controller: OpenviewTreeRepoBundle:Metadata:delete }
-    
+
+# avvia la ricerca nel repository di documenti
+openview_treerepo_search:
+    pattern:  /repo/search/{terms}
+    defaults: { _controller: OpenviewTreeRepoBundle:Search:search }
+    options:
+        expose: true
+
 
 #
 # rpc per chiamate ajax
