@@ -1,6 +1,7 @@
 <?php
 namespace Openview\TreeRepoBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Openview\TreeRepoBundle\Handler\SearchResultHandler;
 
 
 /**
@@ -40,33 +41,25 @@ class SearchController extends Controller
     public function renderSearchDataAction($type, $id) {
         $item = null;
         $metadataArray = array();
+        $srH = new SearchResultHandler($this->get('doctrine_mongodb'));
         
         if ($type === 'node') {
             // carica elemento
             $item = $this->getDoctrine()->getRepository('OpenviewTreeRepoBundle:Node')->find($id);
             if ($item) {
                 // carica metadati, se esistono
-                if ($item->getMetadata() != null) {
-                    $metadata = $this->get('doctrine_mongodb')
-                            ->getRepository('OpenviewDynamicDocumentBundle:DynamicDocument')
-                            ->find($item->getMetadata());
-                    $structure = $metadata->getStructure();
-                    $structureName = $structure->getName();
-                    //echo '<pre>'; \Doctrine\Common\Util\Debug::dump($structure->getFields(), 5); exit;
-                    foreach ($structure->getFields() as $field) {
-                        //echo '<pre>'; \Doctrine\Common\Util\Debug::dump($field, 5);
-                        $metadataArray = array_merge($metadataArray, array($field->getLabel() => $field->getSearchableValue()));
-                    }
-                    //exit;
-                }
-                // carica dimensione file da gridfs
+                $metadataArray = $srH->getMetadata($item->getMetadata());
             }
         }
         else if ($type === 'metadata') {
-            //
-        }
-        else {
-            //
+            // carica elemento
+            $item = $this->getDoctrine()
+                    ->getRepository('OpenviewTreeRepoBundle:Node')
+                    ->findOneBy(array(
+                        'metadata'=>$id
+                    ));
+            // carica metadati
+            $metadataArray = $srH->getMetadata($id);
         }
         
         $searchresult = array(
@@ -75,8 +68,6 @@ class SearchController extends Controller
             'size'=>'100Kb',
             'metadata'=>$metadataArray,
         );
-        
-        
         
         return $this->render('OpenviewTreeRepoBundle:Search:_searchResult.html.twig', array(
             'result'=>$searchresult
