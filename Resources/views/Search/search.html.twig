@@ -38,11 +38,13 @@ Parameters:
         <ol class="search-result">
             {% for item in items %}
             <li>
-                <h3><a href="">{{ item.hit._source.filename }}</a></h3>
+                {#<h3><a href="">{{ item.hit._source.filename }}</a></h3>
                 <div>
                     <div class="text-muted">path/to/{{ item.hit._source.filename }}</div>
                     <div>{{ item.hit._source.length }} bytes</div>
-                </div>
+                </div>#}
+                {#<pre>{{ dump(item) }}</pre>#}
+                {{ render(controller("OpenviewTreeRepoBundle:Search:renderSearchData", {'type': item.hit._type, 'id': item.hit._id})) }}
             </li>
             {% endfor %}
         </ol>

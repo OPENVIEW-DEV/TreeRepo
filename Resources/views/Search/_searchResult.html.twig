@@ -1,0 +1,23 @@
+{#
+Show the search result for a node
+Parameters:
+- result: node information array
+#}
+<li>
+    <h3><a href="#">{{ result.title }}</a></h3>
+    <div>
+        <div class="text-muted">{{ result.path }} {{ result.size }}</div>
+        <div class="metadata">
+            {% if result.metadata | length > 0 %}
+                <dl class="dl-horizontal">
+                {% for label,value in result.metadata %}
+                    <dt>{{ label }}</dt>
+                    <dd>{{ value }}</dd>
+                {% endfor %}
+                </dl>
+            {% else %}
+                <span class="muted">No metadata</span>
+            {% endif %}
+        </div>
+    </div>
+</li>
