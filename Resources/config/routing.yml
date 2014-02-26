@@ -9,6 +9,12 @@ openview_treerepo_node_newfolder:
     options:
         expose: true
 
+openview_treerepo_node_show:
+    pattern:  /repo/node/{nodeid}
+    defaults: { _controller: OpenviewTreeRepoBundle:Node:show }
+    options:
+        expose: true
+    
 # mostra il wizard per modificare i metadata dei nodi
 openview_treerepo_metadata_editwizard:
     pattern:  /repo/node/metadatawizard/{nodeid}

@@ -34,11 +34,14 @@ function mostraElencoFile(elencoJson) {
     if (elencoJson.data.length > 0) {
         for (var i=0; i<elencoJson.data.length; i++) {
             var s = '<tr>' +
-                '<td><i class="icon icon-file-alt"></i> ' +
-                elencoJson.data[i].name + '</td>' +
+                '<td>' +
+                    '<i class="icon icon-file-alt"></i> ' +
+                    '<a href="' + Routing.generate('openview_treerepo_node_show', {'nodeid': elencoJson.data[i].id }) + '">' + 
+                    elencoJson.data[i].name + '</a></td>' +
                 '<td></td>' +
                 '<td class="center"><i class="icon icon-zoom-in bigger-120 blue"></i> ' +
-                    '<a href="' + Routing.generate('openview_treerepo_metadata_editwizard', {'nodeid': elencoJson.data[i].id}) + '"><i class="icon icon-edit bigger-120 blue"></i></a> ' +
+                    '<a href="' + Routing.generate('openview_treerepo_metadata_editwizard', {'nodeid': elencoJson.data[i].id}) + '">' +
+                    '<i class="icon icon-edit bigger-120 blue"></i></a> ' +
                     '<i class="icon icon-trash bigger-120 red"></i></td>' + 
                 '</tr>';
             $('#tree-files').append(s);

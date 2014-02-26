@@ -6,6 +6,7 @@ breadcrumbs:
     admin: Impostazioni
     metadataedit: Metadati
     metadatadyndoc: Metadati
+    nodeshow: Dettaglio file
     
 toolbar:
     uplevel:    Risali
@@ -60,4 +61,10 @@ pages:
         dyndoctpl: Gestione template
     search:
         title: Risultati ricerca
+    nodeshow:
+        title: Dettaglio file
+        download: Scarica
+        metadata: Metadati
+        nometadata: Non sono presenti metadati
+        
     

@@ -11,7 +11,7 @@
 
 {% block breadcrumbs %}
     <li class="active">
-        <a href="index.html"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+        <a href="{{ url('openview_doc_browser_index') }}"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
     </li>
     <li class="active">
         <a href="{{ url('openview_treerepo_node_index') }}">{{ 'breadcrumbs.repository' | trans }}</a>

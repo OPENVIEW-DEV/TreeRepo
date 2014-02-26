@@ -1,0 +1,63 @@
+{#
+Show the details of a node
+Parameters:
+- item: node to be shown
+- metadata: metadata array
+#}
+{% extends '::base.html.twig' %}
+{% trans_default_domain 'treerepo' %}
+
+
+{% block breadcrumbs %}
+    <li class="active">
+        <a href="{{ url('openview_doc_browser_index') }}"><i class="icon-home home-icon"></i> {{ 'breadcrumbs.home' | trans ({}, 'messages') }}</a>
+    </li>
+    <li class="active">
+        <a href="{{ url('openview_treerepo_node_index') }}">{{ 'breadcrumbs.repository' | trans }}</a>
+    </li>
+    <li class="active">
+        {{ 'breadcrumbs.nodeshow' | trans }}
+    </li>
+{% endblock %}
+    
+    
+
+{% block content %}
+<div class="row">
+    <!-- Title -->
+    <div class="page-header">
+        <h1>
+            {% if item is not null %}
+                {{ item.name }}
+            {% else %}
+                {{ 'pages.nodeshow.title' | trans }}
+            {% endif %}
+        </h1>
+    </div>
+    {% if item is not null %}
+        <div class="col-md-12 col-sm-12">
+            <a href="#" class="btn btn-primary pull-right"><i class="icon icon-download"></i> {{ 'pages.nodeshow.download' | trans }}</a>
+        </div>
+        <!--div class="col-md-6">
+            
+        </div-->
+        <div class="col-md-12 col-sm-12">
+            <h2 class="blue lighter">{{ 'pages.nodeshow.metadata' | trans }}</h2>
+            {% if metadata | length > 0 %}
+                <dl class="dl-horizontal">
+                {% for label,value in metadata %}
+                    <dt>{{ label }}</dt>
+                    <dd>{{ value }}</dd>
+                {% endfor %}
+                </dl>
+            {% else %}
+                <span class="text-muted">{{ 'pages.nodeshow.nometadata' | trans }}</span>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="alert alert-info">
+            {{ 'msg.noitemfound' | trans }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

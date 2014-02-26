@@ -6,6 +6,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Openview\TreeRepoBundle\Form\Type\FolderType;
 use Openview\TreeRepoBundle\Entity\Node;
 use Openview\TreeRepoBundle\Document\StoredItem;
+use Openview\TreeRepoBundle\Handler\SearchResultHandler;
 
 /**
  * Manages repository structure: display, tree navigation, upload, ...
@@ -172,5 +173,28 @@ class NodeController extends Controller
         unlink($uploadedFile);
         
         return new Response('Ok');
+    }
+    
+    
+    
+    /**
+     * Mostra i dettagli di un nodo
+     * 
+     * @param type $nodeid
+     */
+    public function showAction($nodeid) {
+        $item = $this->getDoctrine()->getRepository('OpenviewTreeRepoBundle:Node')->find($nodeid);
+        $metadataArray = array();
+        
+        $srH = new SearchResultHandler($this->get('doctrine_mongodb'));
+        if ($item) {
+            // carica metadati, se esistono
+            $metadataArray = $srH->getMetadata($item->getMetadata());
+        }
+        
+        return $this->render('OpenviewTreeRepoBundle:Node:show.html.twig', array(
+            'item'=>$item,
+            'metadata'=>$metadataArray,
+        ));
     }
 }
